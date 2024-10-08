@@ -1,8 +1,11 @@
 const weatherForm = document.getElementById('weatherForm');
 const cityInput = document.getElementById('cityInput');
 const submitBtn = document.getElementById('submitBtn');
-
 const weatherContainer = document.getElementById('weatherContainer');
+const loader = document.getElementById('loader');
+
+
+loader.style.display = 'none';
 
 submitBtn.addEventListener('click', () => {
     const city = cityInput.value.trim();
@@ -15,7 +18,11 @@ submitBtn.addEventListener('click', () => {
 
 let getWeather = async (city) => {
     try {
-        const response = await fetch(`https://api.weatherstack.com/current?access_key=1f871f0982c354628de5075ebb05c17b&%20query=${city}`);
+        
+        loader.style.display = 'block';
+        weatherContainer.innerHTML = '';
+
+        const response = await fetch(`https://api.weatherstack.com/current?access_key=1f871f0982c354628de5075ebb05c17b&query=${city}`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -27,6 +34,9 @@ let getWeather = async (city) => {
     } catch (error) {
         console.error('Error:', error);
         alert('Error fetching weather data. Please try again.');
+    } finally {
+        
+        loader.style.display = 'none';
     }
 }
 
@@ -42,19 +52,15 @@ let createElement = (name, value) => {
     const elementValue = value ?? "Not Available";
     element.textContent = elementValue;
     return element;
-
 }
-
-
 
 function displayWeather(data) {
     try {
-
         weatherContainer.innerHTML = '';
         const cityName = createElement('h2', data.location.name);
         appendChild(cityName);
         const countryName = createElement('p', data.location.country);
-        appendChild(countryName)
+        appendChild(countryName);
         const temperature = createElement('p', `Temperature: ${data.current.temperature}°C`);
         appendChild(temperature);
         const weatherDescription = createElement('p', `Weather: ${data.current.weather_descriptions[0]}`);
@@ -72,10 +78,4 @@ function displayWeather(data) {
         const message = createElement('span', `Error: ${error.message}`);
         appendChild(message);
     }
-
 }
-
-
-
-
-
