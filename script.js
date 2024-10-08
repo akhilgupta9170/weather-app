@@ -75,7 +75,7 @@ function displayWeather(data) {
         appendChild(weatherIcon);
     }
     catch (error) {
-        const message = createElement('span', `Error: ${error.message}`);
+        const message = createElement('span', `Please enter valid city name.`);
         appendChild(message);
     }
 }
